@@ -34,8 +34,11 @@ public class TaskMapper {
         if(request.getDescription() != null){
             task.setDescription(request.getDescription());
         }
-        if(request.isCompleted() && task.getCompletedAt() == null){
-            task.setCompletedAt(LocalDateTime.now());
+        if(request.isCompleted() != null){
+            task.setCompleted(request.isCompleted());
+            if(request.isCompleted() && task.getCompletedAt() ==  null){
+                task.setCompletedAt(LocalDateTime.now());
+            }
         }
     }
 }

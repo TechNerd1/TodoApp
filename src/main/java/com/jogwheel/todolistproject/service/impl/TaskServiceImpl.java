@@ -5,6 +5,7 @@ import com.jogwheel.todolistproject.dto.request.UpdateTaskRequest;
 import com.jogwheel.todolistproject.dto.response.TaskResponse;
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.entity.TaskList;
+import com.jogwheel.todolistproject.exception.ResourceNotFoundException;
 import com.jogwheel.todolistproject.mapper.TaskMapper;
 import com.jogwheel.todolistproject.repository.TaskListRepository;
 import com.jogwheel.todolistproject.repository.TaskRepository;
@@ -42,16 +43,10 @@ public class TaskServiceImpl implements TaskService {
     public TaskResponse updateTask(UUID id, UpdateTaskRequest updateTaskRequest) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+
+        TaskMapper.updateEntity(task, updateTaskRequest);
         task.setUpdatedAt(LocalDateTime.now());
-        task.setTitle(updateTaskRequest.getTitle());
-        task.setDescription(updateTaskRequest.getDescription());
-        if(!task.isCompleted() && updateTaskRequest.isCompleted()){
-            task.setCompleted(true);
-            task.setCompletedAt(LocalDateTime.now());
-        }
-        else{
-            task.setCompleted(false);
-        }
+
         Task updated = taskRepository.save(task);
         return TaskMapper.toResponse(updated);
     }

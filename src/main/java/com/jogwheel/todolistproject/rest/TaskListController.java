@@ -48,9 +48,9 @@ public class TaskListController {
     }
 
     @DeleteMapping("/{taskListId}")
-    public String deleteTaskList(@PathVariable UUID taskListId) {
+    public ResponseEntity<Void> deleteTaskList(@PathVariable UUID taskListId) {
         taskListService.deleteTaskListById(taskListId);
-        return "TaskList with id " + taskListId + " has been deleted";
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{taskListId}/tasks")

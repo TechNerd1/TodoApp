@@ -8,7 +8,7 @@ public class UpdateTaskRequest {
     @Size(max = 1000)
     private String description;
 
-    private boolean completed;
+    private Boolean completed;
     public UpdateTaskRequest() {
     }
 
@@ -28,11 +28,13 @@ public class UpdateTaskRequest {
         this.description = description;
     }
 
-    public boolean isCompleted() {
+    public Boolean isCompleted() {
         return completed;
     }
 
-    public void setCompleted(boolean completed) {
+    public void setCompleted(Boolean completed) {
         this.completed = completed;
     }
+
+
 }

@@ -2,9 +2,9 @@ package com.jogwheel.todolistproject.service.impl;
 
 import com.jogwheel.todolistproject.dto.request.CreateTaskListRequest;
 import com.jogwheel.todolistproject.dto.request.UpdateTaskListRequest;
-import com.jogwheel.todolistproject.dto.request.UpdateTaskRequest;
 import com.jogwheel.todolistproject.dto.response.TaskListResponse;
 import com.jogwheel.todolistproject.entity.TaskList;
+import com.jogwheel.todolistproject.exception.ResourceNotFoundException;
 import com.jogwheel.todolistproject.mapper.TaskListMapper;
 import com.jogwheel.todolistproject.repository.TaskListRepository;
 import com.jogwheel.todolistproject.service.TaskListService;

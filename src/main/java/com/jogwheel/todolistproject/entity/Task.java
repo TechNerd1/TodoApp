@@ -16,10 +16,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(nullable = false)
-    @NotBlank(message = "Title is required")
-    @Size(max = 255, message = "Title must be less than 255 characters")
     private String title;
-    @Size(max = 1000, message = "Description must be less than 1000 characters")
     private String description;
     private boolean completed = false;
 

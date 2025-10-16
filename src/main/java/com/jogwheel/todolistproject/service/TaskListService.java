@@ -1,7 +1,6 @@
 package com.jogwheel.todolistproject.service;
 
 import com.jogwheel.todolistproject.dto.request.CreateTaskListRequest;
-import com.jogwheel.todolistproject.dto.request.CreateTaskRequest;
 import com.jogwheel.todolistproject.dto.request.UpdateTaskListRequest;
 import com.jogwheel.todolistproject.dto.response.TaskListResponse;
 

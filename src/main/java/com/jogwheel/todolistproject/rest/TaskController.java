@@ -42,9 +42,6 @@ public class TaskController {
 
     @DeleteMapping("/{taskId}")
     public ResponseEntity<Void> deleteTask(@PathVariable UUID taskId) {
-        if(taskService.getTaskById(taskId) == null){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
         taskService.deleteTask(taskId);
         return ResponseEntity.noContent().build();
     }
