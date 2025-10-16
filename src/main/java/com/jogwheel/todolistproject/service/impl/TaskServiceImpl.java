@@ -1,7 +1,11 @@
 package com.jogwheel.todolistproject.service.impl;
 
+import com.jogwheel.todolistproject.dto.request.CreateTaskRequest;
+import com.jogwheel.todolistproject.dto.request.UpdateTaskRequest;
+import com.jogwheel.todolistproject.dto.response.TaskResponse;
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.entity.TaskList;
+import com.jogwheel.todolistproject.mapper.TaskMapper;
 import com.jogwheel.todolistproject.repository.TaskListRepository;
 import com.jogwheel.todolistproject.repository.TaskRepository;
 import com.jogwheel.todolistproject.service.TaskService;
@@ -10,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -22,23 +27,33 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task createTask(Task task, UUID taskListId) {
-        TaskList taskList = taskListRepository.findById(taskListId)
-                        .orElseThrow(() -> new ResourceNotFoundException("TaskList with id " + taskListId + " does not exist"));
+    public TaskResponse createTask(CreateTaskRequest createTaskRequest) {
+        TaskList taskList = taskListRepository.findById(createTaskRequest.getTaskListId())
+                        .orElseThrow(() -> new ResourceNotFoundException("TaskList with id " + createTaskRequest.getTaskListId() + " does not exist"));
+        Task task = TaskMapper.toEntity(createTaskRequest);
+        task.setTaskList(taskList);
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
-        task.setTaskList(taskList);
-        return taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+        return TaskMapper.toResponse(saved);
     }
 
     @Override
-    public Task updateTask(Task task) {
-        Task taskToUpdate = taskRepository.findById(task.getId()).orElseThrow(() -> new ResourceNotFoundException("Task with id " + task.getId() + " not found"));
-        taskToUpdate.setUpdatedAt(LocalDateTime.now());
-        if(task.isCompleted() && taskToUpdate.getCompletedAt() == null) {
-            taskToUpdate.setCompletedAt(LocalDateTime.now());
+    public TaskResponse updateTask(UUID id, UpdateTaskRequest updateTaskRequest) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+        task.setUpdatedAt(LocalDateTime.now());
+        task.setTitle(updateTaskRequest.getTitle());
+        task.setDescription(updateTaskRequest.getDescription());
+        if(!task.isCompleted() && updateTaskRequest.isCompleted()){
+            task.setCompleted(true);
+            task.setCompletedAt(LocalDateTime.now());
         }
-        return taskRepository.save(task);
+        else{
+            task.setCompleted(false);
+        }
+        Task updated = taskRepository.save(task);
+        return TaskMapper.toResponse(updated);
     }
 
     @Override
@@ -48,12 +63,16 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task getTaskById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+    public TaskResponse getTaskById(UUID id) {
+        Task task = taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
+        return TaskMapper.toResponse(task);
     }
 
     @Override
-    public List<Task> getTasksByTaskListId(UUID taskListId) {
-        return taskRepository.findByTaskList_Id(taskListId);
+    public List<TaskResponse> getTasksByTaskListId(UUID taskListId) {
+        return taskRepository.findByTaskList_Id(taskListId)
+                .stream()
+                .map(TaskMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

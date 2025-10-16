@@ -1,9 +1,15 @@
 package com.jogwheel.todolistproject.rest;
 
+import com.jogwheel.todolistproject.dto.request.CreateTaskRequest;
+import com.jogwheel.todolistproject.dto.request.UpdateTaskRequest;
+import com.jogwheel.todolistproject.dto.response.TaskResponse;
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -18,27 +24,29 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-    public Task getTask(@PathVariable UUID taskId) {
-        return taskService.getTaskById(taskId);
+    public ResponseEntity<TaskResponse> getTask(@PathVariable UUID taskId) {
+        return ResponseEntity.ok(taskService.getTaskById(taskId));
     }
 
     @PostMapping
-    public Task createTask(@Valid @RequestBody Task task, @RequestParam UUID taskListId) {
-        return taskService.createTask(task, taskListId);
+    public ResponseEntity<TaskResponse> createTask(@Valid @RequestBody CreateTaskRequest createTaskRequest) {
+        TaskResponse taskResponse = taskService.createTask(createTaskRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskResponse);
     }
 
     @PutMapping("/{taskId}")
-    public Task updateTask(@Valid @PathVariable UUID taskId, @RequestBody Task task) {
-        Task taskToUpdate = taskService.getTaskById(taskId);
-        taskToUpdate.setTitle(task.getTitle());
-        taskToUpdate.setDescription(task.getDescription());
-        taskToUpdate.setCompleted(task.isCompleted());
-        return taskService.updateTask(taskToUpdate);
+    public ResponseEntity<TaskResponse> updateTask(@PathVariable UUID taskId, @Valid @RequestBody UpdateTaskRequest updateTaskRequest) {
+        TaskResponse taskResponse = taskService.updateTask(taskId, updateTaskRequest);
+        return ResponseEntity.ok(taskResponse);
     }
 
     @DeleteMapping("/{taskId}")
-    public void deleteTask(@PathVariable UUID taskId) {
+    public ResponseEntity<Void> deleteTask(@PathVariable UUID taskId) {
+        if(taskService.getTaskById(taskId) == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
         taskService.deleteTask(taskId);
+        return ResponseEntity.noContent().build();
     }
 
 

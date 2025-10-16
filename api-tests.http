@@ -1,0 +1,44 @@
+### GET request to example server
+POST http://localhost:8080/api/tasklists
+Content-Type: application/json
+
+{
+  "title": "Shopping List",
+  "description": "Weekly groceries"
+}
+
+###
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "title": "Buy milk",
+  "description": "2%",
+  "taskListId": "8beaed5e-31e1-45f7-a671-f6f0535fda5e"
+}
+
+###
+GET http://localhost:8080/api/tasklists
+
+###
+GET http://localhost:8080/api/tasklists/8beaed5e-31e1-45f7-a671-f6f0535fda5e
+
+###
+GET http://localhost:8080/api/tasklists/8beaed5e-31e1-45f7-a671-f6f0535fda5e/tasks
+
+###
+PUT http://localhost:8080/api/tasks/d7f85fc9-e971-45cb-8e91-5cff42a27267
+Content-Type: application/json
+
+{
+  "title": "Buy milk",
+  "description": "Whole",
+  "taskListId": "8beaed5e-31e1-45f7-a671-f6f0535fda5e",
+  "completed": false
+}
+
+###
+DELETE http://localhost:8080/api/tasks/d7f85fc9-e971-45cb-8e91-5cff42a27267
+
+###
+DELETE http://localhost:8080/api/tasklists/8beaed5e-31e1-45f7-a671-f6f0535fda5e

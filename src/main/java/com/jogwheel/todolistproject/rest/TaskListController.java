@@ -1,10 +1,16 @@
 package com.jogwheel.todolistproject.rest;
 
+import com.jogwheel.todolistproject.dto.request.CreateTaskListRequest;
+import com.jogwheel.todolistproject.dto.request.UpdateTaskListRequest;
+import com.jogwheel.todolistproject.dto.response.TaskListResponse;
+import com.jogwheel.todolistproject.dto.response.TaskResponse;
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.entity.TaskList;
 import com.jogwheel.todolistproject.service.TaskListService;
 import com.jogwheel.todolistproject.service.TaskService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,27 +26,25 @@ public class TaskListController {
         this.taskService = taskService;
     }
     @GetMapping
-    public List<TaskList> getTaskLists() {
-        return taskListService.getTaskLists();
+    public ResponseEntity<List<TaskListResponse>> getTaskLists() {
+        return ResponseEntity.ok(taskListService.getTaskLists());
     }
 
     @GetMapping("/{taskListId}")
-    public TaskList getTaskList(@PathVariable UUID taskListId) {
-        return taskListService.getTaskListById(taskListId);
+    public ResponseEntity<TaskListResponse> getTaskList(@PathVariable UUID taskListId) {
+        return ResponseEntity.ok(taskListService.getTaskListById(taskListId));
     }
 
     @PostMapping
-    public TaskList createTaskList(@Valid @RequestBody TaskList taskList) {
-        return taskListService.createTaskList(taskList);
+    public ResponseEntity<TaskListResponse> createTaskList(@Valid @RequestBody CreateTaskListRequest createTaskListRequest) {
+        TaskListResponse taskListResponse = taskListService.createTaskList(createTaskListRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskListResponse);
     }
 
     @PutMapping("/{taskListId}")
-    public TaskList updateTaskList(@Valid @PathVariable UUID taskListId, @RequestBody TaskList taskList) {
-        TaskList tempTaskList = taskListService.getTaskListById(taskListId);
-        tempTaskList.setDescription(taskList.getDescription());
-        tempTaskList.setTitle(taskList.getTitle());
-        tempTaskList.setCompleted(taskList.getCompleted());
-        return taskListService.updateTaskList(tempTaskList);
+    public ResponseEntity<TaskListResponse> updateTaskList(@PathVariable UUID taskListId,@Valid  @RequestBody UpdateTaskListRequest updateTaskListRequest) {
+        TaskListResponse response = taskListService.updateTaskList(taskListId, updateTaskListRequest);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{taskListId}")
@@ -50,7 +54,7 @@ public class TaskListController {
     }
 
     @GetMapping("/{taskListId}/tasks")
-    public List<Task> getTasksByTaskListId(@PathVariable UUID taskListId) {
-        return taskService.getTasksByTaskListId(taskListId);
+    public ResponseEntity<List<TaskResponse>> getTasksByTaskListId(@PathVariable UUID taskListId) {
+        return ResponseEntity.ok(taskService.getTasksByTaskListId(taskListId));
     }
 }
