@@ -1,6 +1,9 @@
 package com.jogwheel.todolistproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,10 +17,14 @@ public class TaskList {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(nullable = false)
+    @NotBlank(message = "Title is required")
+    @Size(max = 255, message = "Title must be less than 255 characters")
     private String title;
+    @Size(max = 1000, message = "Description must be less than 1000 characters")
     private String description;
     private double completed = 0.0;
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Task> tasks = new ArrayList<>();
     private LocalDateTime completedAt;
     @Column(nullable = false)

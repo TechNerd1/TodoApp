@@ -1,7 +1,7 @@
 package com.jogwheel.todolistproject.service.impl;
 
 import com.jogwheel.todolistproject.entity.TaskList;
-import com.jogwheel.todolistproject.repo.TaskListRepository;
+import com.jogwheel.todolistproject.repository.TaskListRepository;
 import com.jogwheel.todolistproject.service.TaskListService;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ public class TaskListServiceImpl implements TaskListService {
 
     @Override
     public TaskList getTaskListById(UUID id) {
-        return taskListRepository.findById(id).orElseThrow(() -> new RuntimeException("TaskList with id " + id + " not found"));
+        return taskListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("TaskList with id " + id + " not found"));
     }
 
     @Override
@@ -37,13 +37,14 @@ public class TaskListServiceImpl implements TaskListService {
     @Override
     public TaskList updateTaskList(TaskList taskList) {
         taskListRepository.findById(taskList.getId())
-                .orElseThrow(() -> new RuntimeException("TaskList with id " + taskList.getId() + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("TaskList with id " + taskList.getId() + " not found"));
         taskList.setUpdatedAt(LocalDateTime.now());
         return taskListRepository.save(taskList);
     }
 
     @Override
     public void deleteTaskListById(UUID id) {
+        if(!taskListRepository.existsById(id)) {throw new ResourceNotFoundException("TaskList with id " + id + " not found");}
         taskListRepository.deleteById(id);
     }
 }

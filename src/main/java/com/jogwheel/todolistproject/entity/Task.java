@@ -2,10 +2,13 @@ package com.jogwheel.todolistproject.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+
 
 @Entity
 public class Task {
@@ -13,7 +16,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     @Column(nullable = false)
+    @NotBlank(message = "Title is required")
+    @Size(max = 255, message = "Title must be less than 255 characters")
     private String title;
+    @Size(max = 1000, message = "Description must be less than 1000 characters")
     private String description;
     private boolean completed = false;
 
@@ -27,7 +33,7 @@ public class Task {
     @Column(nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
     @Column(nullable = false)
-    public LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
 
     public Task() {
     }

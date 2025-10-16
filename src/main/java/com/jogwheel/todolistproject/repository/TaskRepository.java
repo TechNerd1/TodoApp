@@ -1,4 +1,4 @@
-package com.jogwheel.todolistproject.repo;
+package com.jogwheel.todolistproject.repository;
 
 import com.jogwheel.todolistproject.entity.Task;
 import org.springframework.data.jpa.repository.JpaRepository;

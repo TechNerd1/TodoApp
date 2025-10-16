@@ -2,8 +2,8 @@ package com.jogwheel.todolistproject.service.impl;
 
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.entity.TaskList;
-import com.jogwheel.todolistproject.repo.TaskListRepository;
-import com.jogwheel.todolistproject.repo.TaskRepository;
+import com.jogwheel.todolistproject.repository.TaskListRepository;
+import com.jogwheel.todolistproject.repository.TaskRepository;
 import com.jogwheel.todolistproject.service.TaskService;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public Task createTask(Task task, UUID taskListId) {
         TaskList taskList = taskListRepository.findById(taskListId)
-                        .orElseThrow(() -> new RuntimeException("TaskList with id " + taskListId + " does not exist"));
+                        .orElseThrow(() -> new ResourceNotFoundException("TaskList with id " + taskListId + " does not exist"));
         task.setCreatedAt(LocalDateTime.now());
         task.setUpdatedAt(LocalDateTime.now());
         task.setTaskList(taskList);
@@ -33,18 +33,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Task task) {
-        task.setUpdatedAt(LocalDateTime.now());
+        Task taskToUpdate = taskRepository.findById(task.getId()).orElseThrow(() -> new ResourceNotFoundException("Task with id " + task.getId() + " not found"));
+        taskToUpdate.setUpdatedAt(LocalDateTime.now());
+        if(task.isCompleted() && taskToUpdate.getCompletedAt() == null) {
+            taskToUpdate.setCompletedAt(LocalDateTime.now());
+        }
         return taskRepository.save(task);
     }
 
     @Override
     public void deleteTask(UUID id) {
+        if(!taskRepository.existsById(id)) {throw new ResourceNotFoundException("Task with id " + id + " does not exist");}
         taskRepository.deleteById(id);
     }
 
     @Override
     public Task getTaskById(UUID id) {
-        return taskRepository.findById(id).orElseThrow(() -> new RuntimeException("Task with id " + id + " not found"));
+        return taskRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
     }
 
     @Override

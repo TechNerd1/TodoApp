@@ -2,6 +2,7 @@ package com.jogwheel.todolistproject.rest;
 
 import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.service.TaskService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,12 +23,12 @@ public class TaskController {
     }
 
     @PostMapping
-    public Task createTask(@RequestBody Task task, @RequestParam UUID taskListId) {
+    public Task createTask(@Valid @RequestBody Task task, @RequestParam UUID taskListId) {
         return taskService.createTask(task, taskListId);
     }
 
     @PutMapping("/{taskId}")
-    public Task updateTask(@PathVariable UUID taskId, @RequestBody Task task) {
+    public Task updateTask(@Valid @PathVariable UUID taskId, @RequestBody Task task) {
         Task taskToUpdate = taskService.getTaskById(taskId);
         taskToUpdate.setTitle(task.getTitle());
         taskToUpdate.setDescription(task.getDescription());
