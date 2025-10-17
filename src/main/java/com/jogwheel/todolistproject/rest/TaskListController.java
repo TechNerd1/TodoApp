@@ -4,8 +4,6 @@ import com.jogwheel.todolistproject.dto.request.CreateTaskListRequest;
 import com.jogwheel.todolistproject.dto.request.UpdateTaskListRequest;
 import com.jogwheel.todolistproject.dto.response.TaskListResponse;
 import com.jogwheel.todolistproject.dto.response.TaskResponse;
-import com.jogwheel.todolistproject.entity.Task;
-import com.jogwheel.todolistproject.entity.TaskList;
 import com.jogwheel.todolistproject.service.TaskListService;
 import com.jogwheel.todolistproject.service.TaskService;
 import jakarta.validation.Valid;

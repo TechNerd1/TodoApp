@@ -3,15 +3,12 @@ package com.jogwheel.todolistproject.rest;
 import com.jogwheel.todolistproject.dto.request.CreateTaskRequest;
 import com.jogwheel.todolistproject.dto.request.UpdateTaskRequest;
 import com.jogwheel.todolistproject.dto.response.TaskResponse;
-import com.jogwheel.todolistproject.entity.Task;
 import com.jogwheel.todolistproject.service.TaskService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
