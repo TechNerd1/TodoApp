@@ -8,7 +8,7 @@ This project showcases my skills in CRUD and REST operations. Users can create t
 
 ## How It's Made:
 
-**Tech used:** Java, Spring Boot, Spring Web, Spring data JPA, PostgreSQL, React.js, Docker
+**Tech used:** Java, Spring Boot, Spring Web, Spring data JPA, PostgreSQL, React.js, Docker, Maven
 
 The first thing I did after setting the project up was define all the entities. I knew by planning this project out that I would need 2 entities, TaskList and Tasks. Both of these entities were very similar in definition with the primary difference being the way they reference each other. TaskList defines a type List<> named tasks that stores all the tasks within that list, and Task has a TaskList type that references the TaskList it belongs to. 
 
